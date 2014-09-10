@@ -44,7 +44,7 @@ exports.update = function(req, res) {
     if (err) { return handleError(res, err); }
     if(!comment) { return res.send(404); }
     if (comment.owner.toString() !== req.user._id.toString()) {return res.send(403, {error: "Only the owner of the comment can modify it"})}
-    if (req.body.owner && req.body.owner.toString() != comment.owner.toString()) {return res.send(400, {error: "You cannot change the owner of your comment"})}
+    if (req.body.owner && req.body.owner.toString() !== comment.owner.toString()) {return res.send(400, {error: "You cannot change the owner of your comment"})}
     var updated = _.merge(comment, req.body);
     updated.save(function (err) {
       if (err) { return handleError(res, err); }

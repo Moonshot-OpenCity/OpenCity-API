@@ -38,8 +38,8 @@ exports.update = function(req, res) {
     if (err) { return handleError(res, err); }
     if(!postit) { return res.send(404); }
     if (postit.owner.toString() !== req.user._id.toString()) {return res.send(403, {error: "Only the owner of the postit can modify it"})}
-    if (req.body.title && req.body.title.toString() != postit.title.toString()) {return res.send(400, {error: "You cannot change the title of your postit"})}
-    if (req.body.owner && req.body.owner.toString() != postit.owner.toString()) {return res.send(400, {error: "You cannot change the owner of your postit"})}
+    if (req.body.title && req.body.title.toString() !== postit.title.toString()) {return res.send(400, {error: "You cannot change the title of your postit"})}
+    if (req.body.owner && req.body.owner.toString() !== postit.owner.toString()) {return res.send(400, {error: "You cannot change the owner of your postit"})}
     var updated = _.merge(postit, req.body);
     updated.save(function (err) {
       if (err) { return handleError(res, err); }
