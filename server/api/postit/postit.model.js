@@ -14,7 +14,8 @@ var PostitSchema = new Schema({
     index: '2d',
     required: true
   },
-  type: {type: String, required: true}
+  type: {type: String, required: true},
+  createdAt: {type: Date, default: Date.now}
 });
 
 PostitSchema.path("type")
