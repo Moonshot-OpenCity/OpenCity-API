@@ -8,5 +8,5 @@ module.exports = {
     uri: 'mongodb://localhost/opencity-dev'
   },
 
-  seedDB: true
+  // seedDB: true
 };
