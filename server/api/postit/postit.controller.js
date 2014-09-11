@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Postit = require('./postit.model');
+var Vote = require('./vote.model');
 var s3 = require("../../components/s3");
 
 // Get list of postits
@@ -20,7 +21,12 @@ exports.show = function(req, res) {
   Postit.findById(req.params.id, function (err, postit) {
     if(err) { return handleError(res, err); }
     if(!postit) { return res.send(404); }
-    return res.json(postit);
+    postit.getScore(function(err, model) {
+      if(err) { return handleError(res, err); }
+      var postitInfos = postit.toObject();
+      postitInfos.score = model;
+      return res.json(postitInfos);
+    });
   });
 };
 
@@ -74,9 +80,48 @@ exports.searchByLocation = function(req, res) {
   location[0] = req.param("lat");
   location[1] = req.param("lon");
   var limit = req.param("limit") || 20;
-  Postit.find().where("location").near({center: location, maxDistance: 5}).limit(limit).exec(function(err, results, stats) {
+  Postit.find().where("location").near({center: location, maxDistance: 0.005}).limit(limit).exec(function(err, results, stats) {
     if(err) { return handleError(res, err); }
     return res.send(results);
+  });
+}
+
+exports.addVote = function(req, res) {
+  Postit.findById(req.params.id, function (err, postit) {
+    if(err) { return handleError(res, err); }
+    if(!postit) { return res.send(404); }
+    if(postit.owner.toString() === req.user._id.toString()) {return res.send(403, {error: "You cannot vote on your own postit."})}
+    Vote.findOne({owner: req.user._id, postit: req.params.id}, function (err, vote) {
+      if(err) { return handleError(res, err); }
+      if(vote) {
+        vote.type = req.param("type");
+        vote.save(function(err, vote) {
+          if(err) { return handleError(res, err); }
+          return res.send(200, vote);
+        })
+      } else {
+        var voteInfo = {
+          owner: req.user._id,
+          postit: req.params.id,
+          type: req.param("type")
+        }
+        Vote.create(voteInfo, function(err, vote) {
+          if(err) { return handleError(res, err); }
+          return res.json(201, vote);
+        });
+      }
+    });
+  });
+}
+
+exports.deleteVote = function(req, res) {
+  Vote.findOne({owner: req.user._id, postit: req.params.id}, function (err, vote) {
+    if(err) { return handleError(res, err); }
+    if(!vote) { return res.send(404, {error: "You didn't vote on this postit"}); }
+    vote.remove(function(err, vote) {
+      if(err) { return handleError(res, err); }
+      res.send(204);
+    });
   });
 }
 

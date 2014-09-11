@@ -3,6 +3,8 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
+var Vote = require("./vote.model");
+
 var postitTypes = ["positive", "negative"];
 
 var PostitSchema = new Schema({
@@ -21,6 +23,19 @@ var PostitSchema = new Schema({
 PostitSchema.virtual("coverURL").get(function() {
   return "https://opencity.s3-eu-west-1.amazonaws.com/postit/cover_" + this._id + ".png";
 });
+PostitSchema.method("getScore", function(callback) {
+  var that = this;
+  var o = {};
+  o.map = function() { emit(this._id, this.type === "positive" ? 1 : -1); }
+  o.reduce = function(ids, votes) { return Array.sum(votes); }
+  o.out = {inline: 1};
+  o.query = {postit: that._id};
+  Vote.mapReduce(o, function(err, model, stats) {
+    console.log(err, model, stats);
+    callback(err, model.lenght ? model[0].value : 0);
+  });
+});
+
 
 PostitSchema.path("type")
     .validate(function(type) {
