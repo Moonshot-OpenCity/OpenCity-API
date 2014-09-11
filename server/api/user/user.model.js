@@ -79,7 +79,7 @@ UserSchema
 UserSchema
   .path('name')
   .validate(function(name) {
-    return name.length;
+    return name && name.length;
   }, 'Name cannot be blank');
 
 // Validate email is not taken
@@ -96,6 +96,16 @@ UserSchema
       respond(true);
     });
 }, 'The specified email address is already in use.');
+
+var emailRegex = /[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|fr)\b/;
+
+// Validate email is not taken
+UserSchema
+  .path('email')
+  .validate(function(value) {
+    return emailRegex.test(value);
+}, 'The specified email address is not valid.');
+
 
 var validatePresenceOf = function(value) {
   return value && value.length;
