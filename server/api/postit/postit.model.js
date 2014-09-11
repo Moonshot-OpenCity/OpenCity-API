@@ -18,6 +18,10 @@ var PostitSchema = new Schema({
   createdAt: {type: Date, default: Date.now}
 });
 
+PostitSchema.virtual("coverURL").get(function() {
+  return "https://opencity.s3-eu-west-1.amazonaws.com/postit/cover_" + this._id + ".png";
+});
+
 PostitSchema.path("type")
     .validate(function(type) {
         return postitTypes.indexOf(type) + 1;

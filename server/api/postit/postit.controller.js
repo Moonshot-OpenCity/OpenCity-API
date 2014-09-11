@@ -2,10 +2,14 @@
 
 var _ = require('lodash');
 var Postit = require('./postit.model');
+var s3 = require("../../components/s3");
 
 // Get list of postits
 exports.index = function(req, res) {
   Postit.find(function (err, postits) {
+    for (var i = postits.length - 1; i >= 0; i--) {
+      postits[i] = postits[i].toObject({virtuals: true});
+    };
     if(err) { return handleError(res, err); }
     return res.json(200, postits);
   });
@@ -27,7 +31,11 @@ exports.create = function(req, res) {
   postitInfo.location = [req.body.lat, req.body.lon];
   Postit.create(postitInfo, function(err, postit) {
     if(err) { return handleError(res, err); }
-    return res.json(201, postit);
+    s3.generateUrl("image/png", "postit/cover_" + postit._id + ".png", function(credentials) {
+      var postitInfos = postit.toObject();
+      postitInfos.imageUpload = credentials;
+      return res.json(201, postitInfos);
+    });
   });
 };
 
@@ -63,8 +71,8 @@ exports.destroy = function(req, res) {
 
 exports.searchByLocation = function(req, res) {
   var location = [0,0];
-  location[0] = req.param("lon");
-  location[1] = req.param("lat");
+  location[0] = req.param("lat");
+  location[1] = req.param("lon");
   Postit.find().where("location").near({center: location, maxDistance: 5}).exec(function(err, results, stats) {
     if(err) { return handleError(res, err); }
     return res.send(results);
