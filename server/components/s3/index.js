@@ -10,7 +10,6 @@ var s3 = new AWS.S3();
 exports.generateUrl = function(mimeType, name, callback) {
     var params = {Bucket: 'opencity', Key: name, ACL: "public-read"};
     s3.getSignedUrl('putObject', params, function(err, url) {
-        console.log(err);
         callback(url);
     });
 }
