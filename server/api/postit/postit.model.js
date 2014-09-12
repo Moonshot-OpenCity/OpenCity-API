@@ -31,7 +31,7 @@ PostitSchema.method("getScore", function(callback) {
   o.out = {inline: 1};
   o.query = {postit: that._id};
   Vote.mapReduce(o, function(err, model, stats) {
-    callback(err, model.lenght ? model[0].value : 0);
+    callback(err, model && model.length ? model[0].value : 0);
   });
 });
 

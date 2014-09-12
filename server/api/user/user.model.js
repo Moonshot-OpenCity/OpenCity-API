@@ -97,14 +97,14 @@ UserSchema
     });
 }, 'The specified email address is already in use.');
 
-var emailRegex = /[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|fr)\b/;
+// var emailRegex = /[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|fr)\b/;
 
-// Validate email is not taken
-UserSchema
-  .path('email')
-  .validate(function(value) {
-    return emailRegex.test(value);
-}, 'The specified email address is not valid.');
+// // Validate email is not taken
+// UserSchema
+//   .path('email')
+//   .validate(function(value) {
+//     return emailRegex.test(value);
+// }, 'The specified email address is not valid.');
 
 
 var validatePresenceOf = function(value) {
