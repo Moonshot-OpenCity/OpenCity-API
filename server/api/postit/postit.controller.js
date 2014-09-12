@@ -80,7 +80,7 @@ exports.searchByLocation = function(req, res) {
   location[0] = req.param("lat");
   location[1] = req.param("lon");
   var limit = req.param("limit") || 20;
-  Postit.find().where("location").near({center: location, maxDistance: 0.005}).limit(limit).exec(function(err, results, stats) {
+  Postit.find().where("location").near({center: location, maxDistance: 0.05}).limit(limit).exec(function(err, results, stats) {
     if(err) { return handleError(res, err); }
     return res.send(results);
   });
