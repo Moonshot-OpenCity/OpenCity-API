@@ -5,14 +5,19 @@ angular.module 'openCityApp', [
   'ngResource',
   'ngSanitize',
   'ui.router',
-  'ui.bootstrap'
+  'ui.bootstrap';
+  'google-maps',
+  'restangular'
 ]
-.config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) ->
+.config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, RestangularProvider) ->
   $urlRouterProvider
   .otherwise '/'
 
   $locationProvider.html5Mode true
   $httpProvider.interceptors.push 'authInterceptor'
+
+  RestangularProvider.setBaseUrl "/api"
+
 
 .factory 'authInterceptor', ($rootScope, $q, $cookieStore, $location) ->
   # Add authorization token to headers
