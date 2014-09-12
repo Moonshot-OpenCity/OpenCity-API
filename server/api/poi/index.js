@@ -6,8 +6,6 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
-console.log("coucou")
-
 router.get('/searchByLocation', controller.searchByLocation);
 router.get('/:id', controller.show);
 
