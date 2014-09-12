@@ -34,6 +34,9 @@ UserSchema
   .get(function() {
     return this._password;
   });
+UserSchema.virtual("imageURL").get(function() {
+  return "https://opencity.s3-eu-west-1.amazonaws.com/user/image_" + this._id + ".png";
+});
 
 // Public profile information
 UserSchema

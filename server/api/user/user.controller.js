@@ -4,6 +4,7 @@ var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
+var s3 = require("../../components/s3");
 
 var validationError = function(res, err) {
   return res.json(422, err);
@@ -89,7 +90,11 @@ exports.me = function(req, res, next) {
   }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
     if (err) return next(err);
     if (!user) return res.json(401);
-    res.json(user);
+    s3.generateUrl("image/png", "user/image_" + user._id + ".png", function(credentials) {
+      var userInfos = user.toObject({virtuals: true});
+      userInfos.imageUpload = credentials;
+      return res.json(201, userInfos);
+    });
   });
 };
 
