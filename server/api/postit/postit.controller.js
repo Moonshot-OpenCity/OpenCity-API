@@ -18,7 +18,7 @@ exports.index = function(req, res) {
 
 // Get a single postit
 exports.show = function(req, res) {
-  Postit.findById(req.params.id, function (err, postit) {
+  Postit.findById(req.params.id).populate("owner", "-hashedPassword -salt").exec(function (err, postit) {
     if(err) { return handleError(res, err); }
     if(!postit) { return res.send(404); }
     postit.getScore(function(err, model) {
