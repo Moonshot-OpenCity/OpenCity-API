@@ -12,7 +12,12 @@ angular.module 'openCityApp'
         postit: -> postits.get postit._id
       controller: ($scope, postit) ->
         $scope.postit = postit
-        $scope.vote = (type) -> postits.vote postit, type
+        $scope.comments = postit.getComments().$object
+        $scope.vote = (type) -> postit.vote type
+        $scope.sendComment = (comment) ->
+          postit.addComment(comment).then (created) ->
+            $scope.comments.push created
+            comment.description = ""
 
   handlePostit = (value) ->
     value.onClick = ->

@@ -18,5 +18,17 @@
                 <i class="glyphicon glyphicon-arrow-down vote-arrow negative" ng-click="vote('negative')" ng-class="{active: postit.ownVote && postit.ownVote.type == 'negative'}"></i>
             </div>
         </div>
+
+        <div class="comments">
+            <div class="comment row" ng-repeat="comment in comments">
+                <p class="col-md-12">{{comment.description}}</p>
+            </div>
+        </div>
+
+        <div class="add_comment row">
+            <textarea rows="1" ng-model="newComment.description" class="col-md-10"></textarea>
+            <button class="btn btn-default col-md-2" ng-click="sendComment(newComment)"><i class="glyphicon glyphicon-chevron-right"></i></button>
+        </div>
+
     </div>
 </div>
