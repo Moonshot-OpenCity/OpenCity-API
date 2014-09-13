@@ -23,9 +23,19 @@ exports.show = function(req, res) {
     if(!postit) { return res.send(404); }
     postit.getScore(function(err, model) {
       if(err) { return handleError(res, err); }
-      var postitInfos = postit.toObject();
+      var postitInfos = postit.toObject({virtuals: true});
       postitInfos.score = model;
-      return res.json(postitInfos);
+      if (req.user)
+      {
+        Vote.findOne({owner: req.user._id, postit: postit._id}, function(err, vote) {
+          if(err) { return handleError(res, err); }
+          if (vote)
+            postitInfos.ownVote = vote;
+          return res.json(postitInfos);
+        })
+      }
+      else
+        return res.json(postitInfos);
     });
   });
 };
@@ -41,6 +51,15 @@ exports.create = function(req, res) {
       var postitInfos = postit.toObject();
       postitInfos.imageUpload = credentials;
       return res.json(201, postitInfos);
+    });
+    var voteInfo = {
+      owner: req.user._id,
+      postit: postit._id,
+      type: "positive"
+    }
+    Vote.create(voteInfo, function(err, vote) {
+      if(err) { return handleError(res, err); }
+      return res.json(201, vote);
     });
   });
 };
@@ -90,7 +109,6 @@ exports.addVote = function(req, res) {
   Postit.findById(req.params.id, function (err, postit) {
     if(err) { return handleError(res, err); }
     if(!postit) { return res.send(404); }
-    if(postit.owner.toString() === req.user._id.toString()) {return res.send(403, {error: "You cannot vote on your own postit."})}
     Vote.findOne({owner: req.user._id, postit: req.params.id}, function (err, vote) {
       if(err) { return handleError(res, err); }
       if(vote) {
