@@ -8,13 +8,20 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
  * App-wide Styles
  */
 
-.browsehappy {
-    margin: 0.2em 0;
-    background: #ccc;
-    color: #000;
-    padding: 0.2em 0;
-}
+html {
 
+}
+.navbar-default {
+    background-color: #735540;
+    border-color: #614837;
+    color: white;
+}
+.navbar-default .navbar-text {
+    color: white;
+}
+.navbar-default .navbar-nav > li > a {
+    color: white;
+}
 // Component styles are injected through grunt
 // injector
 @import 'account/login/login.scss';

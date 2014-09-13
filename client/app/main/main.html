@@ -5,13 +5,21 @@
     <div class="container">
       <img class="col-md-4 col-md-offset-4" src="assets/images/OpenCity-Logo.png" alt="OpenCity">
     </div>
+    <div class="hero-slogan">
+      <h2>Communiquez et améliorez votre ville !</h2>
+    </div>
   </header>
   <div fullheight></div>
 </div>
 
 <div class="googlemapsContainer">
   <google-map events="map.events" options="map.options" center="map.center" zoom="map.zoom" draggable="true">
-    <markers models='postits' idKey="'_id'" coords="'self'" doCluster="'true'" clusterOptions="map.clusterOptions" click="'onClick'"></markers>
+    <marker idKey="1" ng-if="addMarker.activated" coords="addMarker.coords" options="addMarker.options" icon="addMarker.icon" events="addMarker.events"></marker>
+    <markers options="'options'" models='postits' idKey="'_id'" icon="'icon'" coords="'self'" doCluster="'true'" clusterOptions="map.clusterOptions" click="'onClick'"></markers>
   </google-map>
+  <div class="addPinButton">
+    <button class="btn btn-primary btn-lg" ng-click="addPostit()" ng-hide="addMarker.activated">Ajouter un Post-it</button>
+    <button class="btn btn-primary btn-lg" ng-click="showModalAdd()" ng-show="addMarker.activated">Placer le Post-it à la bonne position et cliquez sur ce bouton</button>
+  </div>
 </div>
 

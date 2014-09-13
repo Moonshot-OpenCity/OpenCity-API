@@ -1,0 +1,20 @@
+<form class="postit postit-{{postit.type}}" ng-submit="createPostit(postit)">
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-10">
+                <input type="text" placeholder="Titre" required ng-model="postit.title" class="input-postit-title">
+            </div>
+            <div class="btn-group col-md-2">
+                <button type="button" class="btn btn-default input-postit-type" ng-click="postit.type = 'positive'" ng-class="{'active-positive': postit.type == 'positive'}"><i class="glyphicon glyphicon-thumbs-up"></i></button>
+                <button type="button" class="btn btn-default input-postit-type" ng-click="postit.type = 'negative'" ng-class="{'active-negative': postit.type == 'negative'}"><i class="glyphicon glyphicon-thumbs-down"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <textarea class="postit-description-textarea" placeholder="Description" required ng-model="postit.description"></textarea>
+        <div class="postit-add-buttons">
+            <button class="btn btn-warning" ng-click="close()">Annuler</button>
+            <button type="submit" class="btn btn-primary">Créer le Post-it</button>
+        </div>
+    </div>
+</form>

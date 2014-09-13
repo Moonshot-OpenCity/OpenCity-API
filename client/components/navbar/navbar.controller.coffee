@@ -3,7 +3,7 @@
 angular.module 'openCityApp'
 .controller 'NavbarCtrl', ($scope, $location, Auth) ->
   $scope.menu = [
-    title: 'Home'
+    title: 'Carte'
     link: '/'
   ]
   $scope.isCollapsed = true

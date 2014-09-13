@@ -2,15 +2,14 @@
     <div class="modal-header">
         <h3 class="postit-title modal-title">{{postit.title}}</h3>
     </div>
-    <div class="modal-body">
+    <div class="modal-body container-fluid">
         <div class="row">
             <p class="col-md-11 postit-description">{{postit.description}}</p>
         </div>
         <div class="postit-owner-info row">
-            <img ng-src="{{postit.owner.imageURL}}" class="owner-image col-md-4">
-            <div class="col-md-7">
-                <p>par {{postit.owner.name}}</p>
-                <p am-time-ago="postit.createdAt"></p>
+            <img ng-src="{{postit.owner.imageURL}}" class="owner-image col-md-3">
+            <div class="col-md-8">
+                <p>par {{postit.owner.name}} <span am-time-ago="postit.createdAt"></span></p>
             </div>
             <div class="col-md-1 vote-column">
                 <i class="glyphicon glyphicon-arrow-up vote-arrow positive" ng-click="vote('positive')" ng-class="{active: postit.ownVote && postit.ownVote.type == 'positive'}"></i>
@@ -20,15 +19,28 @@
         </div>
 
         <div class="comments">
-            <div class="comment row" ng-repeat="comment in comments">
-                <p class="col-md-12">{{comment.description}}</p>
+            <div class="comment" ng-repeat="comment in comments">
+                <div class="row">
+                    <img class="comment-owner-image col-md-2" ng-src="{{postit.owner.imageURL}}">
+                    <div class="col-md-10">
+                        <p class="comment-text">{{comment.description}}</p>
+                        <p class="comment-details">par {{postit.owner.name}} <span am-time-ago="comment.createdAt"></span></p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="add_comment row">
-            <textarea rows="1" ng-model="newComment.description" class="col-md-10"></textarea>
-            <button class="btn btn-default col-md-2" ng-click="sendComment(newComment)"><i class="glyphicon glyphicon-chevron-right"></i></button>
-        </div>
+        <form class="add_comment row" ng-submit="sendComment(newComment)">
+            <div class="col-md-12">
+                <div class="input-group">
+                    <input type="text" required ng-model="newComment.description" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    </span>
+                </div><!-- /input-group -->
+                <!-- <button class="btn btn-default col-md-2" type="submit"><i class="glyphicon glyphicon-chevron-right"></i></button> -->
+            </div>
+        </form>
 
     </div>
 </div>

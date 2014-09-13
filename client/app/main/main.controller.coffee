@@ -22,6 +22,9 @@ angular.module 'openCityApp'
   handlePostit = (value) ->
     value.onClick = ->
       showPostIt(value)
+    value.options =
+      animation: google.maps.Animation.DROP
+    value.icon = if value.type == "positive" then "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|00D900" else "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=|D90000"
     value.latitude = value.location[0]
     value.longitude = value.location[1]
 
@@ -30,6 +33,8 @@ angular.module 'openCityApp'
       angular.forEach postitsLoaded, handlePostit
       $scope.postits = $scope.postits.concat postitsLoaded
       $scope.postits = _.uniq $scope.postits, (val) -> val._id
+
+  mapCenter = []
 
   loadPostits(45.75692, 4.85693)
   $scope.map =
@@ -51,14 +56,50 @@ angular.module 'openCityApp'
         center = map.getCenter()
         loadPostits center.lat(), center.lng()
       , 500
-      click: (map, name, mouse) ->
+      # click: (map, name, mouse) ->
         # postits.create
         #   lat: mouse[0].latLng.lat()
         #   lon: mouse[0].latLng.lng()
         #   title: "Coucou c'est un test"
         #   description: "hello !"
-        #   type: "positive"
+        #   type: "negative"
         # .then (postit) ->
         #   handlePostit postit
         #   $scope.postits.push postit
+
+  $scope.addPostit = ->
+    $scope.addMarker.activated = true
+    $scope.addMarker.coords = _.clone $scope.map.center
+
+  $scope.addMarker =
+    activated: false
+    coords: {}
+    events:
+      dragend: (marker, eventName, args) ->
+        $scope.$apply ->
+          $scope.addMarker.coords.latitude = marker.getPosition().lat()
+          $scope.addMarker.coords.longitude = marker.getPosition().lng()
+    options:
+      draggable: true
+    icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=P|0000D9"
+
+  $scope.showModalAdd = ->
+    instance = $modal.open
+      templateUrl: "app/main/postitadd_modal.html"
+      resolve:
+        coords: -> $scope.addMarker.coords
+      controller: ($scope, coords, $modalInstance, postits) ->
+        $scope.close = ->
+          $modalInstance.dismiss 'cancel'
+        $scope.postit =
+          lat: coords.latitude
+          lon: coords.longitude
+        $scope.createPostit = (postit) ->
+          postits.create(postit).then (created) ->
+            $modalInstance.close created
+
+    instance.result.then (created) ->
+      handlePostit created
+      $scope.postits.push created
+      $scope.addMarker.activated = false
 
