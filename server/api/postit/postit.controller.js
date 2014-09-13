@@ -59,7 +59,6 @@ exports.create = function(req, res) {
     }
     Vote.create(voteInfo, function(err, vote) {
       if(err) { return handleError(res, err); }
-      return res.json(201, vote);
     });
   });
 };
