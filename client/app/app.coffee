@@ -7,7 +7,8 @@ angular.module 'openCityApp', [
   'ui.router',
   'ui.bootstrap';
   'google-maps',
-  'restangular'
+  'restangular';
+  'angularMoment'
 ]
 .config ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, RestangularProvider) ->
   $urlRouterProvider
@@ -18,6 +19,8 @@ angular.module 'openCityApp', [
 
   RestangularProvider.setBaseUrl "/api"
 
+.run (amMoment) ->
+  amMoment.changeLocale 'fr'
 
 .factory 'authInterceptor', ($rootScope, $q, $cookieStore, $location) ->
   # Add authorization token to headers

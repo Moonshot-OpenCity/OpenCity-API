@@ -29,3 +29,21 @@
 
 .homepageContent {
 }
+.postit-positive {
+    box-shadow: 0 0 10px green inset;
+}
+.vote-arrow.active {
+    font-size: 16px;
+    &.positive {
+        color: green;
+    }
+    &.negative {
+        color: red;
+    }
+}
+.vote-column {
+    text-align: center;
+    p {
+        margin: 0;
+    }
+}

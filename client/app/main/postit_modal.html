@@ -1,0 +1,22 @@
+<div class="postit postit-{{postit.type}}">
+    <div class="modal-header">
+        <h3 class="postit-title modal-title">{{postit.title}}</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <p class="col-md-11 postit-description">{{postit.description}}</p>
+        </div>
+        <div class="postit-owner-info row">
+            <img ng-src="{{postit.owner.imageURL}}" class="owner-image col-md-4">
+            <div class="col-md-7">
+                <p>par {{postit.owner.name}}</p>
+                <p am-time-ago="postit.createdAt"></p>
+            </div>
+            <div class="col-md-1 vote-column">
+                <i class="glyphicon glyphicon-arrow-up vote-arrow positive" ng-click="vote('positive')" ng-class="{active: postit.ownVote && postit.ownVote.type == 'positive'}"></i>
+                <p>{{postit.score}}</p>
+                <i class="glyphicon glyphicon-arrow-down vote-arrow negative" ng-click="vote('negative')" ng-class="{active: postit.ownVote && postit.ownVote.type == 'negative'}"></i>
+            </div>
+        </div>
+    </div>
+</div>
