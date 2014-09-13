@@ -6,8 +6,11 @@ var Postit = require("../postit/postit.model");
 
 // Get list of comments
 exports.getByPostIt = function(req, res) {
-  Comment.find({postit: req.param("postit")}, function (err, comments) {
+  Comment.find({postit: req.param("postit")}).populate("owner", "-hashedPassword -salt").exec(function (err, comments) {
     if(err) { return handleError(res, err); }
+    for (var i = comments.length - 1; i >= 0; i--) {
+      comments[i] = comments[i].toObject({virtuals: true});
+    };
     return res.json(200, comments);
   });
 };
@@ -32,7 +35,10 @@ exports.create = function(req, res) {
     commentInfo.postit = postit._id;
     Comment.create(commentInfo, function(err, comment) {
       if(err) { return handleError(res, err); }
-      return res.json(201, comment);
+      comment.populate("owner", "-hashedPassword -salt", function(err, comment) {
+        if(err) { return handleError(res, err); }
+        return res.json(201, comment.toObject({virtuals: true}));
+      })
     });
   });
 };

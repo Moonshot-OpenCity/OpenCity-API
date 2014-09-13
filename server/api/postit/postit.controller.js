@@ -115,7 +115,7 @@ exports.addVote = function(req, res) {
         vote.type = req.param("type");
         vote.save(function(err, vote) {
           if(err) { return handleError(res, err); }
-          return res.send(200, vote);
+          return exports.show(req, res);
         })
       } else {
         var voteInfo = {
@@ -125,7 +125,7 @@ exports.addVote = function(req, res) {
         }
         Vote.create(voteInfo, function(err, vote) {
           if(err) { return handleError(res, err); }
-          return res.json(201, vote);
+          return exports.show(req, res);
         });
       }
     });
