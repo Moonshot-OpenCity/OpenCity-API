@@ -18,6 +18,11 @@ var passport = require('passport');
 var session = require('express-session');
 var mongoStore = require('connect-mongo')(session);
 var mongoose = require('mongoose');
+var jwt = require('jsonwebtoken');
+var expressJwt = require('express-jwt');
+var compose = require('composable-middleware');
+var User = require('../api/user/user.model');
+var validateJwt = expressJwt({ secret: config.secrets.session });
 
 module.exports = function(app) {
   var env = app.get('env');
@@ -60,4 +65,24 @@ module.exports = function(app) {
     app.use(morgan(logType));
     app.use(errorHandler()); // Error handler - has to be last
   }
+
+  app.use(function(req, res, next) {
+    if(req.query && req.query.hasOwnProperty('access_token')) {
+      req.headers.authorization = 'Bearer ' + req.query.access_token;
+    }
+    if (req.headers.authorization)
+      validateJwt(req, res, next);
+    else
+      next();
+  });
+  app.use(function(req, res, next) {
+    if (!req.user)
+      return next();
+    User.findById(req.user._id, function (err, user) {
+      req.user = user;
+      next();
+    });
+  });
+
+
 };
